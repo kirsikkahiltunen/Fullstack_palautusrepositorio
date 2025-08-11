@@ -5,11 +5,17 @@ const getAll = () => {
     return axios.get(baseUrl)
 }
 
-const addNew = newPerson => {
+const addNew = (newPerson) => {
     return axios.post(baseUrl, newPerson)
+}
+
+const deleteNumber = (deletedPerson) => {
+    console.log(`${baseUrl}/${deletedPerson}`)
+    return axios.delete(`${baseUrl}/${deletedPerson}`)
 }
 
 export default {
     getAll,
-    addNew
+    addNew,
+    deleteNumber
 }

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import personService from './services/persons'
+import persons from './services/persons'
 
 const Filter = (props) => {
 
@@ -67,16 +68,34 @@ const Persons = (props) => {
 
   const personsToShow =  props.persons.filter((person) => person.name.toLowerCase().includes(props.sharedFilter.toLowerCase()))
 
+  const deletePerson = (person) => {
+    if (confirm(`Do you want to delete ${person.name}?`)){
+      console.log(`person with id: ${person.id} needs to be deleted`)
+      personService
+        .deleteNumber(person.id)
+        .then(() => {
+          console.log(`${person.name} deleted`)
+          props.setPersons(numbers => numbers.filter( number => number.id !== person.id))
+        })
+    }
+    else {
+      console.log('Person was not deleted')
+    }
+    
+  }
+
   return (
     <div>
     {personsToShow.map(person =>
       <div key={person.name}>
-      <p> {person['name']} {person['number']}</p>
+      <p> {person['name']} {person['number']} <button onClick={ () => deletePerson(person) }>{'delete'}</button></p>
       </div>
       )}
     </div>
   )
 }
+
+
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -97,7 +116,7 @@ const App = () => {
       <h2>add a new</h2>
       <PersonForm persons={persons} setPersons={setPersons}></PersonForm>
       <h2>Numbers</h2>
-      <Persons persons={persons} sharedFilter={sharedFilter}></Persons>
+      <Persons persons={persons} setPersons={setPersons} sharedFilter={sharedFilter}></Persons>
     </div>
   )
 
