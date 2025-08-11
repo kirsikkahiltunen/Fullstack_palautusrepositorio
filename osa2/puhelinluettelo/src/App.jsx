@@ -28,7 +28,21 @@ const PersonForm = (props) => {
     const nameObject = {name: newName,
     number: newNumber}
     if (props.persons.some(person => person['name'] === newName)){
-      alert(`${newName} is already added to phonebook`)
+      if (confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
+        const targetPerson = props.persons.find((person) => person.name.toLowerCase() === newName.toLowerCase())
+        personService
+        .changeNumber(targetPerson.id, nameObject)
+        .then(response => {
+          props.setPersons(props.persons.map(person => person.id !== targetPerson.id
+            ? person
+            : response.data))
+          setNewName('')
+          setNewNumber('')
+      })
+      } else {
+        console.log('the number was not replaced')
+      }
+
     } else {
     personService
       .addNew(nameObject)
