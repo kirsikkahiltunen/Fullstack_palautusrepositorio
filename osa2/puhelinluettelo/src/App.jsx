@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import personService from './services/persons'
-import persons from './services/persons'
-
+import Notification from './components/Notification'
 const Filter = (props) => {
 
   const [newFilterValue, setFilterValue] = useState('')
@@ -20,7 +19,6 @@ const Filter = (props) => {
 
 const PersonForm = (props) => {
   const [newName, setNewName] = useState('')
-
   const [newNumber, setNewNumber] = useState('')
 
   const addName = (event) => {
@@ -38,6 +36,12 @@ const PersonForm = (props) => {
             : response.data))
           setNewName('')
           setNewNumber('')
+          props.setSuccessMessage(
+            `Phone number replaced with ${nameObject.number}`
+          )
+          setTimeout(() => {
+            props.setSuccessMessage(null)
+          }, 5000)
       })
       } else {
         console.log('the number was not replaced')
@@ -50,6 +54,12 @@ const PersonForm = (props) => {
         props.setPersons(props.persons.concat(response.data))
         setNewName('')
         setNewNumber('')
+        props.setSuccessMessage(
+          `Added ${nameObject.name}`
+        )
+        setTimeout(() => {
+          props.setSuccessMessage(null)
+        }, 5000)
       })
   }
   }
@@ -91,6 +101,12 @@ const Persons = (props) => {
           console.log(`${person.name} deleted`)
           props.setPersons(numbers => numbers.filter( number => number.id !== person.id))
         })
+        props.setSuccessMessage(
+          `${person.name} deleted`
+        )
+        setTimeout(() => {
+          props.setSuccessMessage(null)
+        }, 5000)
     }
     else {
       console.log('Person was not deleted')
@@ -114,6 +130,7 @@ const Persons = (props) => {
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [sharedFilter, setSharedFilter] = useState('')
+  const [successMessage, setSuccessMessage] = useState(null)
 
   useEffect(() => {
     personService
@@ -126,11 +143,12 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={successMessage} />
       <Filter persons={persons} setSharedFilter={setSharedFilter}></Filter>
       <h2>add a new</h2>
-      <PersonForm persons={persons} setPersons={setPersons}></PersonForm>
+      <PersonForm persons={persons} setPersons={setPersons} successMessage={successMessage} setSuccessMessage={setSuccessMessage}></PersonForm>
       <h2>Numbers</h2>
-      <Persons persons={persons} setPersons={setPersons} sharedFilter={sharedFilter}></Persons>
+      <Persons persons={persons} setPersons={setPersons} sharedFilter={sharedFilter} successMessage={successMessage} setSuccessMessage={setSuccessMessage}></Persons>
     </div>
   )
 
