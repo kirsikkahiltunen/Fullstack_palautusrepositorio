@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import personService from './services/persons'
-import Notification from './components/Notification'
+import SuccessNotification from './components/SuccessNotification'
+import ErrorNotification from './components/ErrorNotification'
 const Filter = (props) => {
 
   const [newFilterValue, setFilterValue] = useState('')
@@ -42,7 +43,18 @@ const PersonForm = (props) => {
           setTimeout(() => {
             props.setSuccessMessage(null)
           }, 5000)
-      })
+        })
+        .catch(error => {
+          props.setErrorMessage(
+            `Information of ${nameObject.name} has already been removed from server`
+          )
+          setTimeout(() => {
+            props.setErrorMessage(null)
+          }, 5000)
+          props.setPersons(props.persons.filter(person => person.id !== targetPerson.id))
+          setNewName('')
+          setNewNumber('')
+        })
       } else {
         console.log('the number was not replaced')
       }
@@ -131,6 +143,7 @@ const App = () => {
   const [persons, setPersons] = useState([]) 
   const [sharedFilter, setSharedFilter] = useState('')
   const [successMessage, setSuccessMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     personService
@@ -143,10 +156,17 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={successMessage} />
+      <SuccessNotification message={successMessage} />
+      <ErrorNotification message={errorMessage} />
       <Filter persons={persons} setSharedFilter={setSharedFilter}></Filter>
       <h2>add a new</h2>
-      <PersonForm persons={persons} setPersons={setPersons} successMessage={successMessage} setSuccessMessage={setSuccessMessage}></PersonForm>
+      <PersonForm 
+        persons={persons} 
+        setPersons={setPersons} 
+        successMessage={successMessage} 
+        setSuccessMessage={setSuccessMessage}
+        errorMessage={errorMessage}
+        setErrorMessage={setErrorMessage}></PersonForm>
       <h2>Numbers</h2>
       <Persons persons={persons} setPersons={setPersons} sharedFilter={sharedFilter} successMessage={successMessage} setSuccessMessage={setSuccessMessage}></Persons>
     </div>
