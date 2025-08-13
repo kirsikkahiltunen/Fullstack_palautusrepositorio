@@ -4,9 +4,27 @@ import axios from 'axios'
 const Countries = (props) => {
   const showCountry = props.showCountry
   const setShowCountry = props.setShowCountry
+  const weather = props.weather
+  const setWeather = props.setWeather
+  const baseUrl = 'https://api.openweathermap.org/data/2.5/weather?q='
+  const imageUrl = 'https://openweathermap.org/img/wn/'
+  const apiKey = import.meta.env.VITE_KEY
+
   const countriesToShow =  props.countries.filter((country) => country.name.common.toLowerCase().includes(props.filterValue.toLowerCase()))
+  const getWeather = (country) => {
+      axios
+      .get(`${baseUrl}${country.capital}&appid=${apiKey}&units=metric`)
+      .then((response) => {
+        console.log('säätiedot haettu')
+        console.log(response.data)
+        setWeather(response.data)
+        setShowCountry(country)
+      })
+  }
+
 
   if (showCountry){
+    const image = `${imageUrl}${weather?.weather[0].icon}@2x.png`
     return (
       <div>
         <h1> {showCountry.name.common}</h1>
@@ -19,6 +37,11 @@ const Countries = (props) => {
           </li>
         )}
         <p><img src={showCountry.flags.png}></img></p>
+        <h2>Weather in {showCountry.capital}</h2>
+        <p>Temperature {weather?.main?.temp} °C</p>
+        <p>{weather?.weather[0].description}</p>
+        <p><img src={image}></img></p>
+        <p>Wind {weather?.wind.speed} m/s</p>
       </div>
     )
   }
@@ -28,30 +51,14 @@ const Countries = (props) => {
     )
   }
   if (countriesToShow.length===1){
-    return (
-      <div>
-        {countriesToShow.map(country =>
-        <div key={country.name.common}>
-        <h1> {country.name.common}</h1>
-        <p>Capital: {country.capital}</p>
-        <p>Area: {country.area}</p>
-        <h2>Languages</h2>
-        {Object.entries(country.languages).map(([key, value]) =>
-          <li key={key}>
-            {value}
-          </li>
-        )}
-        <p><img src={country.flags.png}></img></p>
-        </div>
-        )}
-      </div>
-    )
+    getWeather(countriesToShow[0])
+    
   } else {
     return (
       <div>
       {countriesToShow.map(country =>
         <div key={country.name.common}>
-        <p> {country.name.common} <button onClick={ () => setShowCountry(country) }>{'Show'}</button></p>
+        <p> {country.name.common} <button onClick={ () => getWeather(country) }>{'Show'}</button></p>
         </div>
         )}
       </div>
@@ -64,10 +71,12 @@ const App = () => {
   const [filterValue, setFilterValue] = useState('')
   const [message, setMessage] = useState(null)
   const [showCountry, setShowCountry] = useState(null)
+  const [weather, setWeather] = useState(null)
 
   const handleFilterChange = (event) => {
     setFilterValue(event.target.value)
     setShowCountry(null)
+    setWeather(null)
   }
 
   useEffect(() => {
@@ -87,7 +96,9 @@ const App = () => {
         setMessage={setMessage} 
         message={message} 
         setShowCountry={setShowCountry}
-        showCountry={showCountry}></Countries>
+        showCountry={showCountry}
+        setWeather={setWeather}
+        weather={weather}></Countries>
     </div>
   )
 }
