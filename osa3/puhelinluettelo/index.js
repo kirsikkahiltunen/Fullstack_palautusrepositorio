@@ -34,10 +34,16 @@ let persons = [
         "id": "4"
       }
 ]
+
 const infoSum = () => {
     const peopleCount = persons.length
     return (`Phonebook has info for ${peopleCount} people`)
 }
+
+app.get('/', (request, response) => {
+  response.send('Hello World!')
+})
+
 app.get('/info', (request, response) => {
     const dateTime = new Date()
     response.send(`${infoSum()} <p> ${dateTime} </p>`)
