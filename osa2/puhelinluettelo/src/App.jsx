@@ -106,7 +106,7 @@ const Persons = (props) => {
 
   const deletePerson = (person) => {
     if (confirm(`Do you want to delete ${person.name}?`)){
-      console.log(`person with id: ${person.id} needs to be deleted`)
+      console.log(`${person.name} needs to be deleted`)
       personService
         .deleteNumber(person.id)
         .then(() => {
