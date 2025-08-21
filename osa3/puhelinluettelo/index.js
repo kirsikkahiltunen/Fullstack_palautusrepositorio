@@ -80,12 +80,7 @@ const generateId = () => {
 }
 app.post('/api/persons', (request, response) => {
     const personBody = request.body
-
-    if (persons.some(person => person.name === personBody.name)) {
-        return response.status(400).json({
-        error: "name must be unique"
-        })
-      }
+    
     if (!personBody.name) {
         return response.status(400).json({
           error: "name missing"
@@ -98,13 +93,14 @@ app.post('/api/persons', (request, response) => {
       }
 
 
-    const person = {
+    const person = new Person({
         name: personBody.name,
         number: personBody.number,
         id: generateId(),
-      }
-    persons = persons.concat(person)
-    response.json(person)
+      })
+    person.save().then(savedPerson => {
+        response.json(savedPerson)
+    })
 })
 
 const PORT = process.env.PORT
