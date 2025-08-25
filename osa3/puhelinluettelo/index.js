@@ -92,13 +92,6 @@ const generateId = () => {
 app.post('/api/persons', (request, response, next) => {
     const personBody = request.body
 
-    if (!personBody.number) {
-        return response.status(400).json({
-        error: "number missing"
-        })
-      }
-
-
     const person = new Person({
         name: personBody.name,
         number: personBody.number,
