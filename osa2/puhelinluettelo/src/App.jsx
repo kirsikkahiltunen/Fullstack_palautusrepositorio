@@ -73,6 +73,14 @@ const PersonForm = (props) => {
           props.setSuccessMessage(null)
         }, 5000)
       })
+      .catch(error => {
+        props.setErrorMessage(error.response.data.error)
+        setNewName('')
+        setNewNumber('')
+        setTimeout(() => {
+          props.setErrorMessage(null)
+        }, 5000)
+      })
   }
   }
 
