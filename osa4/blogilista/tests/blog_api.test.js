@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
+const blog = require('../models/blog')
 
 const api = supertest(app)
 
@@ -44,6 +45,12 @@ test('correct number of blogs are returned as json', async () => {
         .get('/api/blogs')
         .expect('Content-Type', /application\/json/)
     assert.strictEqual(response.body.length, 3)
+})
+
+test('check that the identifying field of blogs is named as id', async () => {
+    const blogs = await api.get('/api/blogs')
+
+    assert(blogs.body.every(blog => blog.id !== undefined))
 })
 
 after (async () => {
