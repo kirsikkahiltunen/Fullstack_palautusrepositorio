@@ -53,6 +53,27 @@ test('check that the identifying field of blogs is named as id', async () => {
     assert(blogs.body.every(blog => blog.id !== undefined))
 })
 
+test('new blogs can be added', async () => {
+    const newBlog = {
+        title: 'Luontopolku',
+        author: 'Jari Salmi',
+        url: 'luontopolku.org',
+        likes: 7
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+    
+    const blogs = await api.get('/api/blogs')
+
+    assert.strictEqual(blogs.body.length, ++(blogList.length))
+
+    assert((blogs.body.map(blog => blog.title)).includes('Luontopolku'))
+})
+
 after (async () => {
     await mongoose.connection.close()
 })
