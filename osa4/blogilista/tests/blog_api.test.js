@@ -94,6 +94,32 @@ test('if blog is added without value for likes, the value is 0', async () => {
     assert.strictEqual(blog.likes, 0)
 })
 
+test('if blog is added without field tilte, function returns status code 400', async () => {
+    const newBlog = {
+        author: 'Hanna Silvennoinen',
+        url: 'hannanmatkassa.fi',
+        likes: 5
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+})
+
+test('if blog is added without field url, function returns status code 400', async () => {
+    const newBlog = {
+        title: 'Hannan matkassa',
+        author: 'Hanna Silvennoinen',
+        likes: 5
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+})
+
 after (async () => {
     await mongoose.connection.close()
 })
