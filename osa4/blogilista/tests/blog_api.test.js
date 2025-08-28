@@ -74,6 +74,26 @@ test('new blogs can be added', async () => {
     assert((blogs.body.map(blog => blog.title)).includes('Luontopolku'))
 })
 
+test('if blog is added without value for likes, the value is 0', async () => {
+    const newBlog = {
+        title: 'Vege ruokaa',
+        author: 'Mikko Joki',
+        url: 'vegeruokaa.fi'
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+    
+    const blogs = await api.get('/api/blogs')
+
+    const blog = blogs.body.find((blog) => blog.title === 'Vege ruokaa')
+
+    assert.strictEqual(blog.likes, 0)
+})
+
 after (async () => {
     await mongoose.connection.close()
 })
