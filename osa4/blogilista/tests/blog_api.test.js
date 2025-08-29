@@ -154,6 +154,60 @@ describe('deletion of blogs', () => {
     
         assert.strictEqual(blogsAfterDeletion.body.length, blogs.body.length - 1)
     })
+
+    test('fails with status code 404 if blog does not exist', async () => {
+        const blogs = await api.get('/api/blogs')
+        const blogToDelete = blogs.body[0]
+    
+        await api.delete(`/api/blogs/${blogToDelete.id}`)
+
+        await api
+            .delete(`/api/blogs/${blogToDelete.id}`)
+            .expect(404)
+    })
+})
+
+describe('Updating blogs', () => {
+    test('if the likes of blog is successfully updated, the updated number of likes found from database', async () => {
+        const blogs = await api.get('/api/blogs')
+        const blogToUpdate = blogs.body[0]
+        const updatedBlog = {
+            title: 'Testiblogi',
+            author: 'Maija Meikäläinen',
+            url: 'Testiblogi.fi',
+            likes: 10
+        }
+    
+        await api
+            .put(`/api/blogs/${blogToUpdate.id}`)
+            .send(updatedBlog)
+    
+        const blogsAfterUpdate = await api.get('/api/blogs')
+        const blogAfterUpdate = blogsAfterUpdate.body[0]
+    
+        assert.strictEqual(blogAfterUpdate.likes, 10)
+    })
+    test('fails with status code 404 if blog does not exist', async () => {
+        const blogs = await api.get('/api/blogs')
+        const blogToDelete = blogs.body[0]
+    
+        await api.delete(`/api/blogs/${blogToDelete.id}`)
+
+        const nonExistingId = blogToDelete.id
+        
+        const updatedBlog = {
+            title: 'Testiblogi',
+            author: 'Maija Meikäläinen',
+            url: 'Testiblogi.fi',
+            likes: 10
+        }
+    
+        await api
+            .put(`/api/blogs/${nonExistingId}`)
+            .send(updatedBlog)
+            .expect(404)
+    })
+
 })
 
 
