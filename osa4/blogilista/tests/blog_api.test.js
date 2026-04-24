@@ -4,15 +4,17 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
+const User = require('../models/user')
+const jwt = require('jsonwebtoken')
 
 const api = supertest(app)
-
+let userToken
 const blogList = [
 
     {
-        "title": "Testiblogi",
+        "title": "Liikunnan riemua",
         "author": "Maija Meikäläinen",
-        "url": "Testiblogi.fi",
+        "url": "liikunnanriemua.fi",
         "likes": 6
       },
       {
@@ -37,6 +39,29 @@ beforeEach(async () => {
     await blogObject.save()
     blogObject = new Blog(blogList[2])
     await blogObject.save()
+    await User.deleteMany({})
+    const newUser = {
+            username: 'Maija',
+            name: 'Maija Meikäläinen',
+            password: 'salasana'
+        }
+        await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+        const newUserLogin = {
+            username: 'Maija',
+            password: 'salasana'
+        }
+        const result = await api
+            .post('/api/login')
+            .send(newUserLogin)
+            .expect('Content-Type', /application\/json/)
+        
+        const newDecodedToken = jwt.verify(result.body.token, process.env.SECRET)
+        userToken = result.body.token
 })
 
 describe('.get works as expected', () => {
@@ -62,10 +87,10 @@ describe('addition of blogs', () => {
             url: 'luontopolku.org',
             likes: 7
         }
-    
         await api
             .post('/api/blogs')
             .send(newBlog)
+            .set('Authorization', `Bearer ${userToken}`)
             .expect(201)
             .expect('Content-Type', /application\/json/)
         
@@ -86,6 +111,7 @@ describe('addition of blogs', () => {
         await api
             .post('/api/blogs')
             .send(newBlog)
+            .set('Authorization', `Bearer ${userToken}`)
             .expect(201)
             .expect('Content-Type', /application\/json/)
         
@@ -106,6 +132,7 @@ describe('addition of blogs', () => {
         await api
             .post('/api/blogs')
             .send(newBlog)
+            .set('Authorization', `Bearer ${userToken}`)
             .expect(400)
     })
     
@@ -119,25 +146,65 @@ describe('addition of blogs', () => {
         await api
             .post('/api/blogs')
             .send(newBlog)
+            .set('Authorization', `Bearer ${userToken}`)
             .expect(400)
+    })
+
+    test('blogs cannot be added if token is missing', async () => {
+        const newBlog = {
+            title: 'Koodarin blogi',
+            author: 'Ville Niemi',
+            url: 'koodarinblogi.fi',
+            likes: 4
+        }
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(401)
     })
 })
 
 describe('deletion of blogs', () => {
     test('if deletion is successful, status code 204 is returned', async () => {
+        const newBlog = {
+            title: 'Luontopolku',
+            author: 'Jari Salmi',
+            url: 'luontopolku.org',
+            likes: 7
+        }
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .set('Authorization', `Bearer ${userToken}`)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
         const blogs = await api.get('/api/blogs')
-        const blog = blogs.body[0]
-    
+        const blog = blogs.body[blogs.body.length-1]
         await api
             .delete(`/api/blogs/${blog.id}`)
+            .set('Authorization', `Bearer ${userToken}`)
             .expect(204)
     })
     
     test('if deletion is successful, db does not contain blog with title of deleted blog', async () => {
+        const newBlog = {
+            title: 'Luontopolku',
+            author: 'Jari Salmi',
+            url: 'luontopolku.org',
+            likes: 7
+        }
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .set('Authorization', `Bearer ${userToken}`)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
         const blogs = await api.get('/api/blogs')
-        const blogToDelete = blogs.body[0]
+        const blogToDelete = blogs.body[blogs.body.length-1]
     
-        await api.delete(`/api/blogs/${blogToDelete.id}`)
+        await api.delete(`/api/blogs/${blogToDelete.id}`).set('Authorization', `Bearer ${userToken}`)
     
         const blogsAfterDeletion = await api.get('/api/blogs')
     
@@ -145,24 +212,53 @@ describe('deletion of blogs', () => {
     })
     
     test('if deletion is successful the number of blogs decrease by one', async () => {
+        const newBlog = {
+            title: 'Luontopolku',
+            author: 'Jari Salmi',
+            url: 'luontopolku.org',
+            likes: 7
+        }
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .set('Authorization', `Bearer ${userToken}`)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
         const blogs = await api.get('/api/blogs')
-        const blogToDelete = blogs.body[0]
+        const blogToDelete = blogs.body[blogs.body.length-1]
     
-        await api.delete(`/api/blogs/${blogToDelete.id}`)
+        await api.delete(`/api/blogs/${blogToDelete.id}`).set('Authorization', `Bearer ${userToken}`)
     
         const blogsAfterDeletion = await api.get('/api/blogs')
     
         assert.strictEqual(blogsAfterDeletion.body.length, blogs.body.length - 1)
     })
 
-    test('fails with status code 404 if blog does not exist', async () => {
-        const blogs = await api.get('/api/blogs')
-        const blogToDelete = blogs.body[0]
-    
-        await api.delete(`/api/blogs/${blogToDelete.id}`)
+    test('deletion fails with status code 404 if blog does not exist', async () => {
+        const newBlog = {
+            title: 'Luontopolku',
+            author: 'Jari Salmi',
+            url: 'luontopolku.org',
+            likes: 7
+        }
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .set('Authorization', `Bearer ${userToken}`)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
 
+        const blogs = await api.get('/api/blogs')
+        const blogToDelete = blogs.body[blogs.body.length-1]
         await api
             .delete(`/api/blogs/${blogToDelete.id}`)
+            .set('Authorization', `Bearer ${userToken}`)
+            .expect(204)
+    
+        await api
+            .delete(`/api/blogs/${blogToDelete.id}`)
+            .set('Authorization', `Bearer ${userToken}`)
             .expect(404)
     })
 })
@@ -188,10 +284,25 @@ describe('Updating blogs', () => {
         assert.strictEqual(blogAfterUpdate.likes, 10)
     })
     test('fails with status code 404 if blog does not exist', async () => {
+        const newBlog = {
+            title: 'Luontopolku',
+            author: 'Jari Salmi',
+            url: 'luontopolku.org',
+            likes: 7
+        }
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .set('Authorization', `Bearer ${userToken}`)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
         const blogs = await api.get('/api/blogs')
-        const blogToDelete = blogs.body[0]
-    
-        await api.delete(`/api/blogs/${blogToDelete.id}`)
+        const blogToDelete = blogs.body[blogs.body.length-1]
+        await api
+            .delete(`/api/blogs/${blogToDelete.id}`)
+            .set('Authorization', `Bearer ${userToken}`)
+            .expect(204)
 
         const nonExistingId = blogToDelete.id
         

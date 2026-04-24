@@ -9,12 +9,17 @@ usersRouter.get('/', async (request, response) => {
 
 usersRouter.post('/', async (request, response) => {
     const body = request.body
-    if (!body.password ){
-        response.status(400).json({error: 'content missing'})
+    if (!body.password || !body.username){
+        return response.status(400).json({error: 'username or password missing'})
     }
-    if (body.password.length < 3){
-        response.status(400).json({error: 'password too short'})
+    else if (body.password.length < 3 || body.username.length < 3){
+        return response.status(400).json({error: 'password or username too short'})
     }
+    const notUnique = await User.findOne({ username: body.username })
+    if (notUnique){
+        return response.status(400).json({error: 'Username must be unique'})
+    }
+
     const saltRounds = 10
     const passwordHash = await bcrypt.hash(body.password, saltRounds)
 

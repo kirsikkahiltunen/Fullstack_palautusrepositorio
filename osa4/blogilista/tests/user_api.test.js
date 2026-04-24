@@ -7,25 +7,8 @@ const User = require('../models/user')
 
 const api = supertest(app)
 
-const userList = [
-    {
-        username: 'testUser123',
-        name: 'Test',
-        password: '123'
-    },
-    {
-        username: 'user1',
-        name: 'user',
-        password: 'password123'
-    }
-]
-
 beforeEach(async () => {
     await User.deleteMany({})
-    let userObject = new User(userList[0])
-    await userObject.save()
-    userObject = new User(userList[1])
-    await userObject.save()
 })
 
 describe('addition of users', () => {
@@ -41,7 +24,7 @@ describe('addition of users', () => {
                     .expect(400)
                     .expect('Content-Type', /application\/json/)
             
-                assert(result.body.error.includes('content missing'))
+                assert(result.body.error.includes('username or password missing'))
     })
 
     test('User cannot be created without username', async () => {
@@ -56,7 +39,7 @@ describe('addition of users', () => {
             .expect(400)
             .expect('Content-Type', /application\/json/)
 
-            assert(result.body.error.includes('User validation failed: username: Path `username` is required.'))
+            assert(result.body.error.includes('username or password missing'))
     })
 
     test('Username length must be at least 3 characters', async () => {
@@ -72,7 +55,7 @@ describe('addition of users', () => {
             .expect(400)
             .expect('Content-Type', /application\/json/)
 
-            assert(result.body.error.includes('is shorter than the minimum allowed length (3)'))
+            assert(result.body.error.includes('password or username too short'))
     })
 
     test('Password length must be at least 3 characters', async () => {
@@ -88,15 +71,21 @@ describe('addition of users', () => {
             .expect(400)
             .expect('Content-Type', /application\/json/)
 
-            assert(result.body.error.includes('password too short'))
+            assert(result.body.error.includes('password or username too short'))
     })
 
     test('Username must be unique', async () => {
         const newUser = {
-            username: 'testUser123',
+            username: 'user1',
             name: 'test user',
             password: 'testpassword'
         }
+
+        await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
 
         const result = await api
             .post('/api/users')
@@ -104,13 +93,14 @@ describe('addition of users', () => {
             .expect(400)
             .expect('Content-Type', /application\/json/)
 
-            assert(result.body.error.includes('expected `username` to be unique'))
+            assert(result.body.error.includes('Username must be unique'))
     })
 
     test('User addition is successful if username and password are valid', async () => {
+        await User.deleteMany({})
         const newUser = {
-            username: 'test',
-            name: 'test user',
+            username: 'Mikko123',
+            name: 'Mikko Meikäläinen',
             password: 'testpassword'
         }
 
@@ -122,8 +112,8 @@ describe('addition of users', () => {
 
             const users = await api.get('/api/users')
 
-            assert.strictEqual(users.body.length, ++(userList.length))
-            assert((users.body.map(user => user.username)).includes('test'))
+            assert.strictEqual(users.body.length, 1)
+            assert((users.body.map(user => user.username)).includes('Mikko123'))
     })
 
 
