@@ -1,9 +1,8 @@
 post http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1pbGxhIiwiaWQiOiI2OWVhMDAxNjg1OWI3NzA3ODYyODVhOWIiLCJpYXQiOjE3NzY5NDc0ODZ9.weqEk2X_dtAgFl_mNGJhI23odyGvFbs3uPqwvy-SLPM
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlZpbGxlIiwiaWQiOiI2OWViNGUyMzU1YjQxZWJjZTJhNmI1MjYiLCJpYXQiOjE3NzcwMjg2NTd9.7-34SU8yFJ9bX-tUInzw-oTj_f25ed0iAsh7FPIlrVg
 {
-    "title": "Minnan matkassa",
-    "author": "Minna Haapaniemi",
-    "url": "minnanmatkassa.fi"
+    "title": "Luontokuvaajan mietteitä",
+    "author": "Ari Korhonen",
+    "url": "luontokuvaajanmietteita.fi"
 }
