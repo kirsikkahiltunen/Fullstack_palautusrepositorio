@@ -153,7 +153,6 @@ describe('Blog app', () => {
             await page.getByRole('button', { name: 'view' }).last().click()
             await expect(page.getByText('ikes: 1')).toBeVisible()
 
-
         })
     })
 })
