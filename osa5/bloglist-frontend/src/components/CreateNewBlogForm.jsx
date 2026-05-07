@@ -1,14 +1,15 @@
 import { useState } from 'react'
+import { TextField, Button } from '@mui/material'
 
-const CreateNewBlogForm = ({ createNewBlog }) => {
+const CreateNewBlogForm = ({ addNewBlog }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
 
-  const addNewBlog = event => {
+  const createBlog = event => {
     event.preventDefault()
-    createNewBlog({
+    addNewBlog({
       title: title,
       author: author,
       url: url
@@ -20,40 +21,31 @@ const CreateNewBlogForm = ({ createNewBlog }) => {
   return (
     <div>
       <h3> Create new blog </h3>
-      <form onSubmit={addNewBlog}>
+      <form onSubmit={createBlog}>
         <div>
-          <label>
-            title
-            <input
-              type='text'
-              value={title}
-              onChange={event => setTitle(event.target.value)}
-            />
-          </label>
+          <TextField
+            label = 'title'
+            value = {title}
+            onChange={event => setTitle(event.target.value)} 
+          />
         </div>
         <div>
-          <label>
-            author
-            <input
-              type='text'
-              value={author}
-              onChange={event => setAuthor(event.target.value)}
-            />
-          </label>
+          <TextField
+            label = 'author'
+            value = {author}
+            onChange={event => setAuthor(event.target.value)} 
+          />
         </div>
         <div>
-          <label>
-            url
-            <input
-              type='text'
-              value={url}
-              onChange={event => setUrl(event.target.value)}
-            />
-          </label>
+          <TextField
+            label = 'url'
+            value = {url}
+            onChange={event => setUrl(event.target.value)} 
+          />
         </div>
-        <button
-          type="submit">create
-        </button>
+        <Button
+          type="submit" variant="contained" style={{ mariginTop: 10 }}>create
+        </Button>
       </form>
     </div>
   )

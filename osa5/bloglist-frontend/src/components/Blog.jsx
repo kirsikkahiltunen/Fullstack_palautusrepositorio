@@ -1,15 +1,18 @@
+import { useParams } from 'react-router-dom'
 import { useState } from 'react'
 
-const Blog = ({ blog, addNewLike, removeBlog, user }) => {
+const Blog = ({ blog, addLikes, deleteBlogs, user }) => {
   const [visible, setVisible] = useState(false)
 
-  const toggleVisibility = () => {
-    setVisible(!visible)
+  const id = useParams().id
+
+  if(!blog) {
+    return null
   }
 
   const handleLike = event => {
     event.preventDefault()
-    addNewLike({
+    addLikes({
       id: blog.id,
       title: blog.title,
       author: blog.author,
@@ -22,7 +25,7 @@ const Blog = ({ blog, addNewLike, removeBlog, user }) => {
   const handleDeletion = event => {
     event.preventDefault()
     if (window.confirm(`Do you want to remove ${blog.title} by ${blog.author}?`)){
-      removeBlog({
+      deleteBlogs({
         id: blog.id
       })
     } else {
@@ -36,14 +39,27 @@ const Blog = ({ blog, addNewLike, removeBlog, user }) => {
     </div>
   )
 
-  if (visible) {
+  if (!user) {
     return (
-      <div className='blogStyle'>
+    <div className='blogStyle'>
         <div>
-          {blog.title} {blog.author}
-          <button onClick={toggleVisibility}>
-              hide
-          </button>
+          <h2>{blog.author}: {blog.title} </h2>
+        </div>
+        <div>
+          {blog.url}
+        </div>
+        <div>
+          likes: {blog.likes}
+        </div>
+        <div>
+          {blog.user.name}
+        </div>
+      </div>
+  )}
+  return (
+    <div className='blogStyle'>
+        <div>
+          <h2>{blog.author}: {blog.title}</h2>
         </div>
         <div>
           {blog.url}
@@ -57,15 +73,6 @@ const Blog = ({ blog, addNewLike, removeBlog, user }) => {
         </div>
         {blog.user.name === user.name && removeButton()}
       </div>
-    )
-  }
-  return (
-    <div className='blogStyle'>
-      {blog.title} {blog.author}
-      <button onClick={toggleVisibility}>
-        view
-      </button>
-    </div>
   )
 }
 export default Blog

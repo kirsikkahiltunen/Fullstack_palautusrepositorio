@@ -7,7 +7,7 @@ test('CreateNewBlogForm updates parent with right information when creating a ne
     const user = userEvent.setup()
     const createBlog = vi.fn()
 
-    render(<CreateNewBlogForm createNewBlog={createBlog} />)
+    render(<CreateNewBlogForm addNewBlog={createBlog} />)
 
     const titleInput = screen.getByLabelText('title')
     const authorInput = screen.getByLabelText('author')

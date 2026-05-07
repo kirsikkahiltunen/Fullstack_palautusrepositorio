@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import loginService from '../services/login'
 import ErrorNotification from './ErrorNotification'
+import { TextField, Button } from '@mui/material'
 
 const LoginForm = ({ handleLogin, errorMessage}) => {
   const [username, setUsername] = useState('')
@@ -22,30 +23,25 @@ return (
       <ErrorNotification message={errorMessage}/>
         <form onSubmit={newLogin}>
           <div>
-            <label>
-            username
-              <input
-                type='text'
-                value={username}
-                onChange={({ target }) =>
-                  setUsername(target.value)}
-              />
-            </label>
+            <TextField
+            label = 'username'
+            value = {username}
+            onChange={({ target }) =>
+                  setUsername(target.value)} 
+            />
           </div>
           <div>
-            <label>
-            password
-              <input
-                type='password'
-                value={password}
-                onChange={({ target }) =>
-                  setPassword(target.value)}
-              />
-            </label>
+            <TextField
+            label = 'password'
+            type = 'password'
+            value = {password}
+            onChange={({ target }) =>
+                  setPassword(target.value)} 
+            />
           </div>
-          <button
-            type='submit'>login
-          </button>
+          <Button
+            type='submit' variant="contained" style={{ mariginTop: 10 }}>login
+          </Button>
         </form>
       </div>
     )
