@@ -44,7 +44,7 @@ const CreateNewBlogForm = ({ addNewBlog }) => {
           />
         </div>
         <Button
-          type="submit" variant="contained" style={{ mariginTop: 10 }}>create
+          type="submit" variant="contained" style={{ marginTop: 10 }}>create
         </Button>
       </form>
     </div>

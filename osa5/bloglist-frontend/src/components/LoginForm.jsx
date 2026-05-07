@@ -40,7 +40,7 @@ return (
             />
           </div>
           <Button
-            type='submit' variant="contained" style={{ mariginTop: 10 }}>login
+            type='submit' variant="contained" style={{ marginTop: 10 }}>login
           </Button>
         </form>
       </div>

@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react'
 import { Routes, Route, Link, useNavigate, useMatch } from 'react-router-dom'
-import { Container } from '@mui/material'
+import { Container, AppBar, Toolbar, Button, Typography } from '@mui/material'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import ErrorNotification from './components/ErrorNotification'
 import SuccessNotification from './components/SuccessNotification'
 import CreateNewBlogForm from './components/CreateNewBlogForm'
 import BlogList from './components/BlogList'
-import LogoutButton from './components/LogoutButton'
 import LoginForm from './components/LoginForm'
 import Blog from './components/Blog'
 
@@ -87,17 +86,33 @@ const App = () => {
     )
   }
 
-  const padding = {
-    padding: 5
-  }
+  const style = { '&:hover' : { bgcolor: 'rgba(255, 255, 255, 0.5)' } }
 
   return (
     <Container>
       <div>
         <div>
-          <Link style={padding} to='/'>blogs</Link>
-          {user && <Link style={padding} to='/new_blog'>new_blog</Link>}
-          {!user ? <Link style={padding} to='/login'>login</Link>: <LogoutButton handleLogout={handleLogout}/> }
+          <AppBar position='static'>
+            <Toolbar>
+              <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
+                Blog List App
+              </Typography>
+              <Button color='inherit' component={Link} to='/' sx={style}>
+                blogs
+              </Button>
+              {user && 
+                <Button color='inherit'component={Link} to='/new_blog' sx={style}>
+                  new blog
+                </Button>}
+              {!user ? 
+                <Button color='inherit'component={Link}  to='/login' sx={style}>
+                  login
+                </Button> :
+                <Button color='inherit' onClick={handleLogout} sx={style}>
+                  Logout
+                </Button> }
+            </Toolbar>
+          </AppBar>
         </div>
         <Routes>
           <Route path='/new_blog' element={
