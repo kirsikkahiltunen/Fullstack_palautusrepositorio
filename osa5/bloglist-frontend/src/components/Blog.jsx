@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom'
 import { useState } from 'react'
+import { Card, CardContent, Button, Typography, CardActions } from '@mui/material'
 
 const Blog = ({ blog, addLikes, deleteBlogs, user }) => {
   const [visible, setVisible] = useState(false)
@@ -35,44 +36,56 @@ const Blog = ({ blog, addLikes, deleteBlogs, user }) => {
 
   const removeButton = () => (
     <div>
-      <button onClick={handleDeletion}> remove </button>
+      <Button onClick={handleDeletion} variant='contained' color='error'> remove </Button>
     </div>
   )
 
   if (!user) {
     return (
-    <div className='blogStyle'>
-        <div>
-          <h2>{blog.author}: {blog.title} </h2>
-        </div>
-        <div>
-          {blog.url}
-        </div>
-        <div>
-          likes: {blog.likes}
-        </div>
-        <div>
-          {blog.user.name}
-        </div>
-      </div>
+      <Card sx={{ maxWidth: 600 }}>
+        <CardContent>
+          <Typography variant='h4' component='div' style={{ marginTop: 10, marginBottom: 10 }}>
+            {blog.title}
+          </Typography>
+          <Typography variant='h5' component='div' style={{ marginTop: 10, marginBottom: 10 }}>
+            by {blog.author}
+          </Typography>
+          <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+            Url: {blog.url}
+          </Typography>
+          <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+            Added by {blog.user.name}
+          </Typography>
+          <Typography variant='h6' component='div'>
+            likes: {blog.likes}
+          </Typography>
+        </CardContent>
+      </Card>
   )}
   return (
-    <div className='blogStyle'>
-        <div>
-          <h2>{blog.author}: {blog.title}</h2>
-        </div>
-        <div>
-          {blog.url}
-        </div>
-        <div>
-          likes: {blog.likes}
-          <button onClick={handleLike}> like </button>
-        </div>
-        <div>
-          {blog.user.name}
-        </div>
-        {blog.user.name === user.name && removeButton()}
-      </div>
+    <Card sx={{ maxWidth: 600 }}>
+        <CardContent>
+          <Typography variant='h4' component='div' style={{ marginTop: 10, marginBottom: 10 }}>
+            {blog.title}
+          </Typography>
+          <Typography variant='h5' component='div'style={{ marginTop: 10, marginBottom: 10 }}>
+            by {blog.author}
+          </Typography>
+          <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+            Url: {blog.url}
+          </Typography>
+          <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+            Added by {blog.user.name}
+          </Typography>
+          <Typography variant='h6' component='div'>
+            likes: {blog.likes}
+          </Typography>
+          <CardActions>
+            <Button onClick={handleLike} variant='contained'> like </Button>
+            {blog.user.name === user.name && removeButton()}
+          </CardActions>
+        </CardContent>
+    </Card>
   )
 }
 export default Blog
