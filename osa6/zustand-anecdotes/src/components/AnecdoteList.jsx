@@ -2,11 +2,12 @@ import { useAnecdotes, useAnecdoteActions } from '../store'
 
 const AnecdoteList = () => {
   const anecdotes = useAnecdotes()
-  const { incrementVotes } = useAnecdoteActions()
+  const { incrementVotes, sortAnecdotes } = useAnecdoteActions()
 
   const vote = id => {
     console.log('vote', id)
     incrementVotes(id)
+    sortAnecdotes()
   }
 
   return (
