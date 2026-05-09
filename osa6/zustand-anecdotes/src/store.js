@@ -27,7 +27,12 @@ const useAnecdoteStore = create((set) => ({
     initialize: anecdotes => set(() => ({
       anecdotes: anecdotes.toSorted((a, b) => (b.votes - a.votes))
     })),
-    setMessage: value => set(() => ({ message: value }))
+    setMessage: value => set(() => ({
+       message: value 
+    })),
+    remove: (id) => set((state) => ({ 
+      anecdotes: state.anecdotes.filter((anecdote) => anecdote.id != id 
+    )})),
   },
 }))
 

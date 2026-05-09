@@ -1,5 +1,6 @@
 import { useAnecdotes, useAnecdoteActions, useNotificationActions } from '../store'
 import anecdoteService from '../services/anecdotes'
+import RemoveAnecdote from './Remove'
 
 const AnecdoteList = () => {
   const anecdotes = useAnecdotes()
@@ -25,6 +26,10 @@ const AnecdoteList = () => {
             has {anecdote.votes}
             <button onClick={() => vote({ anecdote } )}>vote</button>
           </div>
+          {anecdote.votes === 0 && 
+          <div>
+            <RemoveAnecdote id={anecdote.id} />
+          </div>}
         </div>
       ))}
     </div>

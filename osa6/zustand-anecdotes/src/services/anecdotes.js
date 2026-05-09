@@ -44,4 +44,20 @@ const addVote = async (anecdote) => {
     return await response.json()
 
 }
-export default { getAll, createNew, addVote }
+
+const deleteAnecdote = async (id) => {
+    const url = `${baseUrl}/${id}` 
+    const options = {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+    }
+    const response = await fetch(url, options)
+
+    if (!response.ok) {
+        throw new Error('Failed to delete anecdote')
+    }
+    return await response.json()
+
+}
+
+export default { getAll, createNew, addVote, deleteAnecdote }
