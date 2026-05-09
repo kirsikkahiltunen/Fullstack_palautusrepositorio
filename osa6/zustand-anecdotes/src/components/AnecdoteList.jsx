@@ -1,12 +1,14 @@
 import { useAnecdotes, useAnecdoteActions } from '../store'
+import anecdoteService from '../services/anecdotes'
 
 const AnecdoteList = () => {
   const anecdotes = useAnecdotes()
   const { incrementVotes, sortAnecdotes } = useAnecdoteActions()
 
-  const vote = id => {
-    console.log('vote', id)
-    incrementVotes(id)
+  const vote = async ({ anecdote }) => {
+    console.log('vote', anecdote.id)
+    const newVote = await anecdoteService.addVote(anecdote)
+    incrementVotes(anecdote.id)
     sortAnecdotes()
   }
 
@@ -17,7 +19,7 @@ const AnecdoteList = () => {
           <div>{anecdote.content}</div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id)}>vote</button>
+            <button onClick={() => vote({ anecdote } )}>vote</button>
           </div>
         </div>
       ))}

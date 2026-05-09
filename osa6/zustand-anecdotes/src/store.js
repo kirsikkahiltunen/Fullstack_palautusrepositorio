@@ -23,7 +23,9 @@ const useAnecdoteStore = create((set) => ({
     })),
     setFilter: value => set(() => ({ filter: value })
     ),
-    initialize: anecdotes => set(() => ({ anecdotes }))
+    initialize: anecdotes => set(() => ({
+      anecdotes: anecdotes.toSorted((a, b) => (b.votes - a.votes))
+    }))
   },
 }))
 
