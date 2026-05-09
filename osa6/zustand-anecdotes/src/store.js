@@ -11,6 +11,7 @@ const asObject = anecdote => ({
 const useAnecdoteStore = create((set) => ({
   anecdotes: [],
   filter: '',
+  message: null,
   actions: {
     incrementVotes: (id) => set((state) => ({ 
       anecdotes: state.anecdotes.map((anecdote) => anecdote.id === id 
@@ -25,9 +26,18 @@ const useAnecdoteStore = create((set) => ({
     ),
     initialize: anecdotes => set(() => ({
       anecdotes: anecdotes.toSorted((a, b) => (b.votes - a.votes))
-    }))
+    })),
+    setMessage: value => set(() => ({ message: value }))
   },
 }))
+
+const useNotificationStore = create((set) => ({
+  message: null,
+  actions: {
+    setMessage: value => set(() => ({ message: value }))
+  },
+}))
+
 
 export const useAnecdotes = () => {
   const anecdotes = useAnecdoteStore((state) => state.anecdotes)
@@ -36,4 +46,6 @@ export const useAnecdotes = () => {
   return anecdotes
 }
 export const useFilter = () => useAnecdoteStore((state) => state.filter)
+export const useMessage = () => useNotificationStore((state) => state.message)
+export const useNotificationActions = () => useNotificationStore((state) => state.actions)
 export const useAnecdoteActions = () => useAnecdoteStore((state) => state.actions)
