@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import anecdoteService from './services/anecdotes'
 
 const getId = () => (100000 * Math.random()).toFixed(0)
 
@@ -13,20 +14,26 @@ const useAnecdoteStore = create((set) => ({
   filter: '',
   message: null,
   actions: {
-    incrementVotes: (id) => set((state) => ({ 
-      anecdotes: state.anecdotes.map((anecdote) => anecdote.id === id 
-         ? { ...anecdote, votes: anecdote.votes + 1 } : anecdote)})),
-    add: anecdote => set((state) => ({ 
-      anecdotes: state.anecdotes.concat(anecdote) })
-    ),
+    incrementVotes: async (voted_anecdote) => {
+      const newVote = await anecdoteService.addVote(voted_anecdote)
+      set((state) => ({ 
+      anecdotes: state.anecdotes.map((anecdote) => anecdote.id === voted_anecdote.id 
+       ? { ...anecdote, votes: anecdote.votes + 1 } : anecdote)}))
+    },
+    add: async (content) => {
+      const newAnecdote = await anecdoteService.createNew(content)
+      set((state) => ({ 
+      anecdotes: state.anecdotes.concat(newAnecdote) }))
+      },
     sortAnecdotes: () => set((state) => ({
       anecdotes: state.anecdotes.toSorted((a, b) => (b.votes - a.votes)) 
     })),
     setFilter: value => set(() => ({ filter: value })
     ),
-    initialize: anecdotes => set(() => ({
-      anecdotes: anecdotes.toSorted((a, b) => (b.votes - a.votes))
-    })),
+    initialize: async () => {
+      const anecdotes = await anecdoteService.getAll()
+      set (() => ({anecdotes: anecdotes.toSorted((a, b) => (b.votes - a.votes))}))
+    },
     setMessage: value => set(() => ({
        message: value 
     })),

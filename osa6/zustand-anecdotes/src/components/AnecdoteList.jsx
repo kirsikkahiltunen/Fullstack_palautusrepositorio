@@ -8,9 +8,7 @@ const AnecdoteList = () => {
   const { setMessage } = useNotificationActions()
 
   const vote = async ({ anecdote }) => {
-    console.log('vote', anecdote.id)
-    const newVote = await anecdoteService.addVote(anecdote)
-    incrementVotes(anecdote.id)
+    await incrementVotes(anecdote)
     sortAnecdotes()
     setMessage(`You voted "${anecdote.content}"`)
     setTimeout(() => {
