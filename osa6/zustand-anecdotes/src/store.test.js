@@ -105,4 +105,24 @@ describe('useAnecdoteActions', () => {
         expect(anecdoteResult.current[1]).toEqual((mockAnecdotes[3]))
         expect(anecdoteResult.current).toHaveLength(2)
     })
+    it('Voting an anecdote increases the number of votes for the anecdote', async() => {
+         const mockAnecdotes = [{
+            "content": "Test anecdote",
+            "votes": 3,
+            "id": "1"
+            }
+        ]
+
+        anecdoteService.getAll.mockResolvedValue(mockAnecdotes)
+
+        const { result } = renderHook(() => useAnecdoteActions())
+
+        await act(async () => {
+            await result.current.initialize()
+            await result.current.incrementVotes(mockAnecdotes[0])
+        })
+
+        const { result: anecdoteResult } = renderHook(() => useAnecdotes())
+        expect(anecdoteResult.current[0].votes).toBe(4)
+    })
 })
