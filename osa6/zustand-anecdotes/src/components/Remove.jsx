@@ -11,7 +11,6 @@ const RemoveAnecdote = ({ id }) => {
   }
 
     const handleDelete = async () => {
-        const removedAnecdote = await anecdoteService.deleteAnecdote(id)
         remove(id)
     }
 

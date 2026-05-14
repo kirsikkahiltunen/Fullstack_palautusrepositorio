@@ -37,9 +37,11 @@ const useAnecdoteStore = create((set) => ({
     setMessage: value => set(() => ({
        message: value 
     })),
-    remove: (id) => set((state) => ({ 
+    remove: async (id) => {
+      const removedAnecdote = await anecdoteService.deleteAnecdote(id)
+      set((state) => ({ 
       anecdotes: state.anecdotes.filter((anecdote) => anecdote.id != id 
-    )})),
+    )}))},
   },
 }))
 
@@ -50,6 +52,7 @@ const useNotificationStore = create((set) => ({
   },
 }))
 
+export default useAnecdoteStore
 
 export const useAnecdotes = () => {
   const anecdotes = useAnecdoteStore((state) => state.anecdotes)
