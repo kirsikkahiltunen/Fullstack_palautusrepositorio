@@ -68,4 +68,41 @@ describe('useAnecdoteActions', () => {
         expect(anecdoteResult.current[1]).toEqual((mockAnecdotes[0]))
         expect(anecdoteResult.current[2]).toEqual((mockAnecdotes[1]))
     })
+    it('Anecdote list is filtered correctly', async() => {
+         const mockAnecdotes = [{
+            "content": "Test anecdote",
+            "votes": 3,
+            "id": "1"
+            },
+            {
+            "content": "Another anecdote",
+            "votes": 2,
+            "id": "2"
+            },
+            {
+            "content": "New anecdote",
+            "votes": 7,
+            "id": "3"
+            },
+            {
+            "content": "New era of anecdotes",
+            "votes": 1,
+            "id": "4"
+            }
+        ]
+
+        anecdoteService.getAll.mockResolvedValue(mockAnecdotes)
+
+        const { result } = renderHook(() => useAnecdoteActions())
+
+        await act(async () => {
+            await result.current.initialize()
+            await result.current.setFilter('New')
+        })
+
+        const { result: anecdoteResult } = renderHook(() => useAnecdotes())
+        expect(anecdoteResult.current[0]).toEqual((mockAnecdotes[2]))
+        expect(anecdoteResult.current[1]).toEqual((mockAnecdotes[3]))
+        expect(anecdoteResult.current).toHaveLength(2)
+    })
 })
