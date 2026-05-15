@@ -1,24 +1,17 @@
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation } from '@tanstack/react-query'
+import { getAll, createAnecdote } from './requests'
 
 const App = () => {
   const handleVote = (anecdote) => {
     console.log('vote')
   }
 
-  
-
   const result = useQuery({
     queryKey: ['anecdotes'],
     retry: 1,
-    queryFn: async () => {
-      const response = await fetch('http://localhost:3001/anecdotes')
-      if(!response.ok){
-        throw new Error('Fetching anecdotes failed')
-      }
-      return await response.json()
-    }
+    queryFn: getAll
   })
   console.log(JSON.parse(JSON.stringify(result)))
 
