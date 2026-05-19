@@ -10,7 +10,7 @@ const CreateNew = ({ addAnecdote }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    addAnecdote({ content, author, info, votes: 0 })
+    addAnecdote({ content: content.value, author: author.value, info: info.value, votes: 0 })
     navigate('/')
   }
 
@@ -30,7 +30,7 @@ const CreateNew = ({ addAnecdote }) => {
           url for more info
           <input type={info.type} value={info.value} onChange={info.onChange} />
         </div>
-        <button>create</button>
+        <button type='submit'>create</button>
       </form>
     </div>
   )
