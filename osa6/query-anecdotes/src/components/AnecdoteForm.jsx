@@ -1,7 +1,10 @@
 import { createAnecdote } from '../requests'
 import { useAnecdotes } from '../hooks/useAnecdotes'
+import { useContext } from 'react'
+import AnecdoteContext from '../AnecdoteContext'
 
 const AnecdoteForm = () => {
+  const { notification, setNotification } = useContext(AnecdoteContext)
   const { anecdotes, isPending, addAnecdote: addAnecdoteToServer, voteAnecdote } = useAnecdotes()
 
   const onCreate = (event) => {
@@ -10,6 +13,10 @@ const AnecdoteForm = () => {
     event.target.reset()
     console.log('new anecdote')
     addAnecdoteToServer(content)
+
+    setNotification(`Anecdote: "${content}" created`)
+    setTimeout(() => {
+      setNotification(null)}, 5000)
   }
 
   return (
