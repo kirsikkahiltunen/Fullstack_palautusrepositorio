@@ -13,9 +13,15 @@ const useAnecdotes = () => {
         .then(newAnecdote => {setAnecdotes(anecdotes.concat(newAnecdote))
     })})
 
+    const removeAnecdote = ((id) => {
+        anecdoteService.deleteAnecdote(id)
+        .then(removedAnecdote => {setAnecdotes(anecdotes.filter(anecdote => anecdote.id != id))})
+    })
+
     return {
         anecdotes,
-        addAnecdote
+        addAnecdote,
+        removeAnecdote
     }
 }
 export default useAnecdotes
