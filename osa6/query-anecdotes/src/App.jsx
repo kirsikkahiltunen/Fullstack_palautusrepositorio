@@ -1,11 +1,8 @@
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 import { useAnecdotes } from './hooks/useAnecdotes'
-import AnecdoteContext from './AnecdoteContext'
-import { useState } from 'react'
 
 const App = () => {
-  const [notification, setNotification] = useState('')
   const { anecdotes, isPending, isError, addAnecdote: addAnecdoteToServer, voteAnecdote } = useAnecdotes()
 
   const handleVote = (anecdote) => {
@@ -28,10 +25,8 @@ const App = () => {
   return (
     <div>
       <h3>Anecdote app</h3>
-      <AnecdoteContext.Provider value={{ notification, setNotification }}>
         <Notification />
         <AnecdoteForm />
-      </AnecdoteContext.Provider>
 
       {anecdotes.map((anecdote) => (
         <div key={anecdote.id}>
