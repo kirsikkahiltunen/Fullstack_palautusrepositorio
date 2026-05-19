@@ -1,10 +1,9 @@
 import { createAnecdote } from '../requests'
 import { useAnecdotes } from '../hooks/useAnecdotes'
-import { useContext } from 'react'
-import AnecdoteContext from '../AnecdoteContext'
+import useNotify from '../hooks/useNotify'
 
 const AnecdoteForm = () => {
-  const { notification, setNotification } = useContext(AnecdoteContext)
+  const { notification, setNotification } = useNotify()
   const { anecdotes, isPending, addAnecdote: addAnecdoteToServer, voteAnecdote } = useAnecdotes()
 
   const onCreate = (event) => {
