@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom'
 import { useState } from 'react'
 import { Card, CardContent, Button, Typography, CardActions } from '@mui/material'
+import NotFound from './NotFound'
 
 const Blog = ({ blog, addLikes, deleteBlogs, user }) => {
   const [visible, setVisible] = useState(false)
@@ -8,7 +9,7 @@ const Blog = ({ blog, addLikes, deleteBlogs, user }) => {
   const id = useParams().id
 
   if(!blog) {
-    return null
+    return <NotFound/>
   }
 
   const handleLike = event => {

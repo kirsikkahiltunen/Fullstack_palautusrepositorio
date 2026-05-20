@@ -138,7 +138,7 @@ const App = () => {
             </ErrorBoundary>
           } />
           <Route path='*' element={
-            <NotFound/>
+            <NotFound />
           }/>
         </Routes>
       </div>
