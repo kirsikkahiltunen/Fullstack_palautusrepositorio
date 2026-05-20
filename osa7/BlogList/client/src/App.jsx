@@ -10,6 +10,7 @@ import BlogList from './components/BlogList'
 import LoginForm from './components/LoginForm'
 import Blog from './components/Blog'
 import ErrorBoundary from './components/ErrorBoundary'
+import NotFound from './components/NotFound'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -136,6 +137,9 @@ const App = () => {
               <LoginForm handleLogin={handleLogin} errorMessage={errorMessage} />
             </ErrorBoundary>
           } />
+          <Route path='*' element={
+            <NotFound/>
+          }/>
         </Routes>
       </div>
     </Container>
