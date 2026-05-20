@@ -1,14 +1,18 @@
-import { Alert } from '@mui/material'
+import { Alert } from "@mui/material";
 
 const SuccessNotification = ({ message }) => {
   if (message === null) {
-    return null
+    return null;
   }
   return (
-    <Alert label = 'successNotification' style={{ marginTop: 10, marginBottom: 10 }} severity='success'>
+    <Alert
+      label="successNotification"
+      style={{ marginTop: 10, marginBottom: 10 }}
+      severity="success"
+    >
       {message}
     </Alert>
-  )
-}
+  );
+};
 
-export default SuccessNotification
+export default SuccessNotification;

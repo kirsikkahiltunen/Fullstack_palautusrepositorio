@@ -1,14 +1,14 @@
-import { Alert } from '@mui/material'
+import { Alert } from "@mui/material";
 
 const ErrorNotification = ({ message }) => {
   if (message === null) {
-    return null
+    return null;
   }
   return (
-    <Alert style={{ marginTop: 10, marginBottom: 10 }} severity='error'>
+    <Alert style={{ marginTop: 10, marginBottom: 10 }} severity="error">
       {message}
     </Alert>
-  )
-}
+  );
+};
 
-export default ErrorNotification
+export default ErrorNotification;
