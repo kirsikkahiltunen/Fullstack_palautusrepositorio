@@ -9,6 +9,8 @@ const BlogList = ({ blogs, addNewBlog, addLikes, deleteBlogs, successMessage, us
 
   const createNewBlogFormRef = useRef()
 
+  throw new Error('simulated error')
+
 
   return (
     <div>

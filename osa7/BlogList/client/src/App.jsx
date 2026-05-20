@@ -9,6 +9,7 @@ import CreateNewBlogForm from './components/CreateNewBlogForm'
 import BlogList from './components/BlogList'
 import LoginForm from './components/LoginForm'
 import Blog from './components/Blog'
+import ErrorBoundary from './components/ErrorBoundary'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -116,16 +117,24 @@ const App = () => {
         </div>
         <Routes>
           <Route path='/new_blog' element={
-            <CreateNewBlogForm addNewBlog={addNewBlog} />
+            <ErrorBoundary>
+              <CreateNewBlogForm addNewBlog={addNewBlog} />
+            </ErrorBoundary>
           } />
           <Route path='/blogs/:id' element={
-            <Blog blog={blog} addLikes={addLikes} deleteBlogs={deleteBlogs} user={user}/>
+            <ErrorBoundary>
+              <Blog blog={blog} addLikes={addLikes} deleteBlogs={deleteBlogs} user={user}/>
+            </ErrorBoundary>
           } />
           <Route path='/' element={
-            <BlogList blogs={blogs} addNewBlog={addNewBlog} addLikes={addLikes} deleteBlogs={deleteBlogs} successMessage={successMessage} user={user}/>
+            <ErrorBoundary>
+              <BlogList blogs={blogs} addNewBlog={addNewBlog} addLikes={addLikes} deleteBlogs={deleteBlogs} successMessage={successMessage} user={user}/>
+            </ErrorBoundary>
           } />
           <Route path='/login' element={
-            <LoginForm handleLogin={handleLogin} errorMessage={errorMessage} />
+            <ErrorBoundary>
+              <LoginForm handleLogin={handleLogin} errorMessage={errorMessage} />
+            </ErrorBoundary>
           } />
         </Routes>
       </div>
