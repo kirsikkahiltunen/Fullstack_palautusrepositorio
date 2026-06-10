@@ -16,3 +16,5 @@ Linkki Internetissä olevaan sovellukseen: https://puhelinluettelo-pe89.onrender
 [osan 5 tehtävät](https://github.com/kirsikkahiltunen/Fullstack_palautusrepositorio/tree/main/osa5)
 
 [osan 6 tehtävät](https://github.com/kirsikkahiltunen/Fullstack_palautusrepositorio/tree/main/osa6)
+
+[osan 7 tehtävät](https://github.com/kirsikkahiltunen/Fullstack_palautusrepositorio/tree/main/osa7)
