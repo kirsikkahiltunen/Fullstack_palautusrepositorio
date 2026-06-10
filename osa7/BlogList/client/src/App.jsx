@@ -10,6 +10,7 @@ import CreateNewBlogForm from "./components/CreateNewBlogForm"
 import BlogList from "./components/BlogList"
 import LoginForm from "./components/LoginForm"
 import Blog from "./components/Blog"
+import User from "./components/User"
 import UserList from "./components/UserList"
 import ErrorBoundary from "./components/ErrorBoundary"
 import NotFound from "./components/NotFound"
@@ -22,8 +23,14 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
 
   const navigate = useNavigate()
-  const match = useMatch("/blogs/:id")
-  const blog = match ? blogs.find((blog) => blog.id === match.params.id) : null
+  const blogMatch = useMatch("/blogs/:id")
+  const blog = blogMatch
+    ? blogs.find((blog) => blog.id === blogMatch.params.id)
+    : null
+  const userMatch = useMatch("/users/:id")
+  const selectedUser = userMatch
+    ? users.find((user) => user.id === userMatch.params.id)
+    : null
 
   useEffect(() => {
     blogService.getAll().then((blogs) =>
@@ -190,6 +197,14 @@ const App = () => {
                   deleteBlogs={deleteBlogs}
                   user={user}
                 />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path="/users/:id"
+            element={
+              <ErrorBoundary>
+                <User user={selectedUser} />
               </ErrorBoundary>
             }
           />
