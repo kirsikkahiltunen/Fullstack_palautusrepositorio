@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom"
+import { rgbToHex, styled } from "@mui/material/styles"
+import { tableCellClasses } from "@mui/material/TableCell"
 import {
   Table,
   TableBody,
@@ -7,29 +9,47 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Typography,
 } from "@mui/material"
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: "rgb(0, 31, 77)",
+    color: theme.palette.primary.contrastText,
+    fontSize: 20,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 16,
+  },
+}))
 
 const UserList = ({ users }) => {
   return (
     <div>
-      <h2>Users</h2>
+      <Typography
+        variant="h4"
+        component="div"
+        style={{ marginTop: 10, marginBottom: 10 }}
+      >
+        Users
+      </Typography>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Username</TableCell>
-              <TableCell>Number of blogs created</TableCell>
+              <StyledTableCell>Name</StyledTableCell>
+              <StyledTableCell>Username</StyledTableCell>
+              <StyledTableCell>Number of blogs created</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {users.map((user) => (
               <TableRow key={user.id}>
-                <TableCell>
+                <StyledTableCell>
                   <Link to={`/users/${user.id}`}>{user.name}</Link>
-                </TableCell>
-                <TableCell>{user.username}</TableCell>
-                <TableCell>{user.blogs.length}</TableCell>
+                </StyledTableCell>
+                <StyledTableCell>{user.username}</StyledTableCell>
+                <StyledTableCell>{user.blogs.length}</StyledTableCell>
               </TableRow>
             ))}
           </TableBody>
